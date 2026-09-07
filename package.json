@@ -1,0 +1,25 @@
+{
+  "name": "byuntarcaive",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/leehoyeon7475-gif/byuntarcaive.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/leehoyeon7475-gif/byuntarcaive/issues"
+  },
+  "homepage": "https://github.com/leehoyeon7475-gif/byuntarcaive#readme",
+  "dependencies": {
+    "express": "^5.2.1",
+    "multer": "^2.3.0"
+  }
+}

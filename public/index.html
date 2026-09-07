@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>변t 아카이브</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+    body {
+      background-color: #f1f5f9;
+      color: #1e293b;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 16px;
+    }
+
+    /* 비밀번호 잠금 화면 */
+    #lockScreen {
+      background: white;
+      padding: 32px 24px;
+      border-radius: 16px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+      width: 100%;
+      max-width: 360px;
+      text-align: center;
+      margin-top: 15vh;
+    }
+    #lockScreen h2 { margin-bottom: 8px; }
+    #lockScreen p { font-size: 14px; color: #64748b; margin-bottom: 20px; }
+    .input-field {
+      width: 100%;
+      padding: 12px;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 16px;
+      margin-bottom: 12px;
+      outline: none;
+      text-align: center;
+      letter-spacing: 4px;
+    }
+    .btn {
+      width: 100%;
+      padding: 12px;
+      background: #2563eb;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .btn:hover { background: #1d4ed8; }
+
+    /* 메인 커뮤니티 화면 */
+    #mainContent {
+      display: none;
+      width: 100%;
+      max-width: 600px;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: white;
+      padding: 16px 20px;
+      border-radius: 12px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+    }
+    .header-title { font-size: 18px; font-weight: 700; }
+    .logout-btn {
+      background: #f1f5f9;
+      border: none;
+      color: #64748b;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13px;
+    }
+
+    /* 게시글 작성 */
+    .post-creator {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+      margin-bottom: 20px;
+    }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .post-creator input[type="text"], 
+    .post-creator textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 14px;
+      outline: none;
+    }
+    .post-creator textarea {
+      resize: vertical;
+      min-height: 60px;
+    }
+    .upload-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .file-label {
+      background: #e2e8f0;
+      color: #334155;
+      padding: 8px 14px;
+      border-radius: 6px;
+      font-size: 13px;
+      cursor: pointer;
+      font-weight: 500;
+    }
+    .submit-btn {
+      background: #2563eb;
+      color: white;
+      border: none;
+      padding: 8px 18px;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .submit-btn:disabled {
+      background: #94a3b8;
+      cursor: not-allowed;
+    }
+    #fileName {
+      font-size: 12px;
+      color: #64748b;
+      margin-top: 4px;
+    }
+
+    /* 피드 */
+    .feed {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+    .feed-card {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+    .feed-header {
+      padding: 12px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .feed-author { font-weight: 600; font-size: 15px; }
+    .feed-date { font-size: 12px; color: #94a3b8; }
+    .feed-img {
+      width: 100%;
+      max-height: 550px;
+      object-fit: contain;
+      background: #0f172a;
+      display: block;
+    }
+    .feed-body { padding: 14px 16px; }
+    .feed-caption { font-size: 14px; line-height: 1.5; color: #334155; }
+  </style>
+</head>
+<body>
+
+<div id="lockScreen">
+  <h2>🔒 변t 아카이브</h2>
+  <p>비밀번호를 입력하세요.</p>
+  <input type="password" id="pwInput" class="input-field" placeholder="비밀번호" maxlength="10">
+  <button class="btn" onclick="login()">입장하기</button>
+</div>
+
+<div id="mainContent">
+  <header>
+    <div class="header-title">📸 변t 사진 아카이브</div>
+    <button class="logout-btn" onclick="logout()">잠금</button>
+  </header>
+
+  <div class="post-creator">
+    <form id="uploadForm" onsubmit="handleUpload(event)" class="form-group">
+      <input type="text" id="author" placeholder="작성자 이름 / 닉네임" maxlength="12">
+      <textarea id="caption" placeholder="사진에 대한 설명을 적어주세요..."></textarea>
+      <div>
+        <label class="file-label" for="imageInput">📁 고화질 사진 선택 (최대 50MB)</label>
+        <input type="file" id="imageInput" accept="image/*" style="display:none" onchange="showFileName(event)">
+        <div id="fileName">선택된 파일 없음</div>
+      </div>
+      <div class="upload-row">
+        <span></span>
+        <button type="submit" class="submit-btn" id="submitBtn">게시하기</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="feed" id="feedContainer">
+    <p style="text-align: center; color: #94a3b8;">게시글을 가져오는 중...</p>
+  </div>
+</div>
+
+<script>
+  if (sessionStorage.getItem('t_auth') === 'true') {
+    showMain();
+  }
+
+  async function login() {
+    const pw = document.getElementById('pwInput').value;
+    const res = await fetch('/api/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password: pw })
+    });
+
+    if (res.ok) {
+      sessionStorage.setItem('t_auth', 'true');
+      showMain();
+    } else {
+      alert('비밀번호가 올바르지 않습니다.');
+      document.getElementById('pwInput').value = '';
+    }
+  }
+
+  function showMain() {
+    document.getElementById('lockScreen').style.display = 'none';
+    document.getElementById('mainContent').style.display = 'block';
+    fetchPosts();
+  }
+
+  function logout() {
+    sessionStorage.removeItem('t_auth');
+    location.reload();
+  }
+
+  function showFileName(e) {
+    const file = e.target.files[0];
+    if (file) {
+      document.getElementById('fileName').innerText = `${file.name} (${(file.size / 1024 / 1024).toFixed(1)} MB)`;
+    }
+  }
+
+  async function fetchPosts() {
+    try {
+      const res = await fetch('/api/posts');
+      const posts = await res.json();
+      const container = document.getElementById('feedContainer');
+
+      if (posts.length === 0) {
+        container.innerHTML = '<p style="text-align: center; color: #94a3b8; padding: 40px;">등록된 사진이 없습니다. 첫 사진을 올려보세요!</p>';
+        return;
+      }
+
+      container.innerHTML = posts.map(p => `
+        <div class="feed-card">
+          <div class="feed-header">
+            <span class="feed-author">${escapeHtml(p.author)}</span>
+            <span class="feed-date">${p.createdAt}</span>
+          </div>
+          <img class="feed-img" src="${p.imageUrl}" loading="lazy" alt="변t 사진">
+          ${p.caption ? `<div class="feed-body"><p class="feed-caption">${escapeHtml(p.caption)}</p></div>` : ''}
+        </div>
+      `).join('');
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  async function handleUpload(e) {
+    e.preventDefault();
+    const fileInput = document.getElementById('imageInput');
+    if (!fileInput.files[0]) {
+      alert('사진을 선택해주세요!');
+      return;
+    }
+
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.innerText = '업로드 중...';
+
+    const formData = new FormData();
+    formData.append('image', fileInput.files[0]);
+    formData.append('author', document.getElementById('author').value.trim());
+    formData.append('caption', document.getElementById('caption').value.trim());
+
+    try {
+      const res = await fetch('/api/posts', {
+        method: 'POST',
+        body: formData
+      });
+      if (res.ok) {
+        document.getElementById('uploadForm').reset();
+        document.getElementById('fileName').innerText = '선택된 파일 없음';
+        fetchPosts();
+      } else {
+        alert('업로드 실패');
+      }
+    } catch (err) {
+      alert('서버 오류 발생');
+    } finally {
+      btn.disabled = false;
+      btn.innerText = '게시하기';
+    }
+  }
+
+  function escapeHtml(str) {
+    return (str || '').replace(/[&<>'"]/g, 
+      tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
+    );
+  }
+
+  document.getElementById('pwInput').addEventListener('keyup', (e) => {
+    if (e.key === 'Enter') login();
+  });
+</script>
+
+</body>
+</html>
