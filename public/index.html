@@ -2,214 +2,349 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>변t 아카이브</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>변t 아카이브 | Instagram 스타일</title>
   <style>
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     }
     body {
-      background-color: #f1f5f9;
-      color: #1e293b;
+      background-color: #fafafa;
+      color: #262626;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 16px;
     }
 
-    /* 비밀번호 잠금 화면 */
+    /* 🔒 로그인/잠금 화면 */
     #lockScreen {
-      background: white;
-      padding: 32px 24px;
-      border-radius: 16px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+      background: #ffffff;
+      border: 1px solid #dbdbdb;
+      padding: 40px 32px;
+      border-radius: 8px;
       width: 100%;
-      max-width: 360px;
+      max-width: 350px;
       text-align: center;
       margin-top: 15vh;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
     }
-    #lockScreen h2 { margin-bottom: 8px; }
-    #lockScreen p { font-size: 14px; color: #64748b; margin-bottom: 20px; }
-    .input-field {
+    .insta-logo {
+      font-family: 'Brush Script MT', cursive, sans-serif;
+      font-size: 36px;
+      font-weight: bold;
+      margin-bottom: 24px;
+      color: #262626;
+      letter-spacing: 1px;
+    }
+    .lock-desc {
+      font-size: 13px;
+      color: #8e8e8e;
+      margin-bottom: 20px;
+    }
+    .insta-input {
       width: 100%;
-      padding: 12px;
-      border: 1.5px solid #cbd5e1;
-      border-radius: 8px;
-      font-size: 16px;
+      padding: 10px 12px;
+      background: #fafafa;
+      border: 1px solid #dbdbdb;
+      border-radius: 4px;
+      font-size: 14px;
       margin-bottom: 12px;
       outline: none;
       text-align: center;
-      letter-spacing: 4px;
     }
-    .btn {
+    .insta-input:focus {
+      border-color: #a8a8a8;
+    }
+    .insta-btn {
       width: 100%;
-      padding: 12px;
-      background: #2563eb;
-      color: white;
+      padding: 9px;
+      background: #0095f6;
+      color: #ffffff;
       border: none;
-      border-radius: 8px;
-      font-size: 15px;
+      border-radius: 6px;
+      font-size: 14px;
       font-weight: 600;
       cursor: pointer;
+      transition: background-color 0.2s;
     }
-    .btn:hover { background: #1d4ed8; }
+    .insta-btn:hover {
+      background: #1877f2;
+    }
+    .insta-btn:disabled {
+      background: #b2dffc;
+      cursor: not-allowed;
+    }
 
-    /* 메인 커뮤니티 화면 */
+    /* 📸 메인 아카이브 UI */
     #mainContent {
       display: none;
       width: 100%;
-      max-width: 600px;
-    }
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: white;
-      padding: 16px 20px;
-      border-radius: 12px;
-      margin-bottom: 16px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.04);
-    }
-    .header-title { font-size: 18px; font-weight: 700; }
-    .logout-btn {
-      background: #f1f5f9;
-      border: none;
-      color: #64748b;
-      padding: 6px 12px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 13px;
+      max-width: 470px; /* 인스타그램 모바일 피드 기본 폭 */
+      padding-bottom: 60px;
     }
 
-    /* 게시글 작성 */
-    .post-creator {
-      background: white;
-      padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+    /* 상단 네비게이션 바 */
+    .top-nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: #ffffff;
+      border-bottom: 1px solid #dbdbdb;
+      height: 60px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 16px;
+      margin-bottom: 16px;
+    }
+    .nav-logo {
+      font-family: 'Brush Script MT', cursive, sans-serif;
+      font-size: 26px;
+      font-weight: bold;
+      text-decoration: none;
+      color: #262626;
+    }
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .icon-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #262626;
+    }
+
+    /* 업로드 카드 */
+    .upload-card {
+      background: #ffffff;
+      border: 1px solid #dbdbdb;
+      border-radius: 8px;
+      padding: 16px;
       margin-bottom: 20px;
     }
-    .form-group {
+    .upload-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .upload-form {
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 10px;
     }
-    .post-creator input[type="text"], 
-    .post-creator textarea {
+    .upload-form input, .upload-form textarea {
       width: 100%;
-      padding: 10px 12px;
-      border: 1px solid #cbd5e1;
-      border-radius: 8px;
-      font-size: 14px;
+      padding: 10px;
+      background: #fafafa;
+      border: 1px solid #dbdbdb;
+      border-radius: 6px;
+      font-size: 13px;
       outline: none;
     }
-    .post-creator textarea {
+    .upload-form textarea {
       resize: vertical;
-      min-height: 60px;
+      min-height: 55px;
     }
-    .upload-row {
+    .file-select-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
-    .file-label {
-      background: #e2e8f0;
-      color: #334155;
-      padding: 8px 14px;
+    .custom-file-upload {
+      border: 1px solid #dbdbdb;
+      padding: 6px 12px;
       border-radius: 6px;
-      font-size: 13px;
-      cursor: pointer;
-      font-weight: 500;
-    }
-    .submit-btn {
-      background: #2563eb;
-      color: white;
-      border: none;
-      padding: 8px 18px;
-      border-radius: 6px;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-    }
-    .submit-btn:disabled {
-      background: #94a3b8;
-      cursor: not-allowed;
-    }
-    #fileName {
       font-size: 12px;
-      color: #64748b;
+      font-weight: 600;
+      background: #fafafa;
+      cursor: pointer;
+    }
+    #fileChosen {
+      font-size: 11px;
+      color: #8e8e8e;
       margin-top: 4px;
     }
 
-    /* 피드 */
-    .feed {
-      display: flex;
-      flex-direction: column;
-      gap: 18px;
-    }
+    /* 피드 포스트 카드 */
     .feed-card {
-      background: white;
-      border-radius: 12px;
+      background: #ffffff;
+      border: 1px solid #dbdbdb;
+      border-radius: 8px;
+      margin-bottom: 20px;
       overflow: hidden;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
     }
-    .feed-header {
-      padding: 12px 16px;
+    .post-header {
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      padding: 12px 14px;
+      gap: 10px;
     }
-    .feed-author { font-weight: 600; font-size: 15px; }
-    .feed-date { font-size: 12px; color: #94a3b8; }
-    .feed-img {
+    /* 인스타 스토리 링 아바타 */
+    .avatar-ring {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .avatar-circle {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: bold;
+      color: #262626;
+      border: 2px solid #fff;
+      user-select: none;
+    }
+    .post-author {
+      font-size: 14px;
+      font-weight: 600;
+      color: #262626;
+    }
+
+    /* 포스트 이미지 */
+    .post-img-container {
+      width: 100%;
+      background: #000000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .post-img {
       width: 100%;
       max-height: 550px;
       object-fit: contain;
-      background: #0f172a;
       display: block;
     }
-    .feed-body { padding: 14px 16px; }
-    .feed-caption { font-size: 14px; line-height: 1.5; color: #334155; }
+
+    /* 인터랙션 버튼 영역 */
+    .post-actions {
+      padding: 10px 14px 6px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .post-actions svg {
+      cursor: pointer;
+      transition: transform 0.15s;
+    }
+    .post-actions svg:hover {
+      opacity: 0.7;
+    }
+    .post-actions svg:active {
+      transform: scale(1.2);
+    }
+    .heart-btn.liked svg {
+      fill: #ed4956;
+      stroke: #ed4956;
+    }
+
+    /* 본문 & 캡션 */
+    .post-details {
+      padding: 0 14px 14px;
+    }
+    .like-count {
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+    .caption-box {
+      font-size: 14px;
+      line-height: 1.4;
+      margin-bottom: 6px;
+      word-break: break-word;
+    }
+    .caption-author {
+      font-weight: 600;
+      margin-right: 6px;
+    }
+    .post-time {
+      font-size: 10px;
+      color: #8e8e8e;
+      letter-spacing: 0.2px;
+      text-transform: uppercase;
+    }
   </style>
 </head>
 <body>
 
+<!-- 🔒 잠금 화면 -->
 <div id="lockScreen">
-  <h2>🔒 변t 아카이브</h2>
-  <p>비밀번호를 입력하세요.</p>
-  <input type="password" id="pwInput" class="input-field" placeholder="비밀번호" maxlength="10">
-  <button class="btn" onclick="login()">입장하기</button>
+  <div class="insta-logo">Byun-gram</div>
+  <p class="lock-desc">변t 아카이브를 보려면 비밀번호를 입력하세요.</p>
+  <input type="password" id="pwInput" class="insta-input" placeholder="비밀번호 입력" maxlength="10">
+  <button class="insta-btn" onclick="login()">로그인</button>
 </div>
 
+<!-- 📸 인스타 피드 메인 화면 -->
 <div id="mainContent">
-  <header>
-    <div class="header-title">📸 변t 사진 아카이브</div>
-    <button class="logout-btn" onclick="logout()">잠금</button>
-  </header>
+  <!-- 상단 네비게이션 -->
+  <nav class="top-nav">
+    <span class="nav-logo">Byunstagram</span>
+    <div class="nav-actions">
+      <!-- 새로고침 아이콘 -->
+      <button class="icon-btn" onclick="fetchPosts()" title="새로고침">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
+        </svg>
+      </button>
+      <!-- 로그아웃(잠금) 아이콘 -->
+      <button class="icon-btn" onclick="logout()" title="잠금">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+        </svg>
+      </button>
+    </div>
+  </nav>
 
-  <div class="post-creator">
-    <form id="uploadForm" onsubmit="handleUpload(event)" class="form-group">
-      <input type="text" id="author" placeholder="작성자 이름 / 닉네임" maxlength="12">
-      <textarea id="caption" placeholder="사진에 대한 설명을 적어주세요..."></textarea>
-      <div>
-        <label class="file-label" for="imageInput">📁 고화질 사진 선택 (최대 50MB)</label>
-        <input type="file" id="imageInput" accept="image/*" style="display:none" onchange="showFileName(event)">
-        <div id="fileName">선택된 파일 없음</div>
-      </div>
-      <div class="upload-row">
-        <span></span>
-        <button type="submit" class="submit-btn" id="submitBtn">게시하기</button>
+  <!-- 새 게시물 업로드 창 -->
+  <div class="upload-card">
+    <div class="upload-title">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+        <circle cx="8.5" cy="8.5" r="1.5"/>
+        <polyline points="21 15 16 10 5 21"/>
+      </svg>
+      새 게시물 만들기
+    </div>
+    <form id="uploadForm" onsubmit="handleUpload(event)" class="upload-form">
+      <input type="text" id="author" placeholder="작성자 이름 (닉네임)" maxlength="12">
+      <textarea id="caption" placeholder="문구 입력..."></textarea>
+      
+      <div class="file-select-row">
+        <div>
+          <label class="custom-file-upload" for="imageInput">📷 사진 선택</label>
+          <input type="file" id="imageInput" accept="image/*" style="display:none" onchange="showFileName(event)">
+          <div id="fileChosen">선택된 사진 없음</div>
+        </div>
+        <button type="submit" class="insta-btn" id="submitBtn" style="width: auto; padding: 7px 16px;">공유하기</button>
       </div>
     </form>
   </div>
 
-  <div class="feed" id="feedContainer">
-    <p style="text-align: center; color: #94a3b8;">게시글을 가져오는 중...</p>
-  </div>
+  <!-- 인스타그램 타임라인 피드 -->
+  <div id="feedContainer"></div>
 </div>
 
 <script>
@@ -229,7 +364,7 @@
       sessionStorage.setItem('t_auth', 'true');
       showMain();
     } else {
-      alert('비밀번호가 올바르지 않습니다.');
+      alert('비밀번호가 일치하지 않습니다.');
       document.getElementById('pwInput').value = '';
     }
   }
@@ -248,8 +383,13 @@
   function showFileName(e) {
     const file = e.target.files[0];
     if (file) {
-      document.getElementById('fileName').innerText = `${file.name} (${(file.size / 1024 / 1024).toFixed(1)} MB)`;
+      document.getElementById('fileChosen').innerText = `${file.name} (${(file.size / 1024 / 1024).toFixed(1)}MB)`;
     }
+  }
+
+  // 하트 토글 효과 (인스타 감성 인터랙션)
+  function toggleHeart(el) {
+    el.classList.toggle('liked');
   }
 
   async function fetchPosts() {
@@ -259,20 +399,64 @@
       const container = document.getElementById('feedContainer');
 
       if (posts.length === 0) {
-        container.innerHTML = '<p style="text-align: center; color: #94a3b8; padding: 40px;">등록된 사진이 없습니다. 첫 사진을 올려보세요!</p>';
+        container.innerHTML = `
+          <div style="background: white; border: 1px solid #dbdbdb; border-radius: 8px; padding: 40px; text-align: center; color: #8e8e8e;">
+            등록된 게시물이 없습니다.<br>위에서 첫 사진을 공유해 보세요!
+          </div>
+        `;
         return;
       }
 
-      container.innerHTML = posts.map(p => `
-        <div class="feed-card">
-          <div class="feed-header">
-            <span class="feed-author">${escapeHtml(p.author)}</span>
-            <span class="feed-date">${p.createdAt}</span>
+      container.innerHTML = posts.map(p => {
+        const authorInitial = (p.author || '익')[0];
+        return `
+          <div class="feed-card">
+            <!-- 작성자 프로필 헤더 -->
+            <div class="post-header">
+              <div class="avatar-ring">
+                <div class="avatar-circle">${escapeHtml(authorInitial)}</div>
+              </div>
+              <span class="post-author">${escapeHtml(p.author || '익명')}</span>
+            </div>
+
+            <!-- 사진 원본 컨테이너 -->
+            <div class="post-img-container">
+              <img class="post-img" src="${p.imageUrl}" loading="lazy" alt="피드 사진">
+            </div>
+
+            <!-- 하트, 댓글, 공유 아이콘 -->
+            <div class="post-actions">
+              <span class="icon-btn heart-btn" onclick="toggleHeart(this)">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                </svg>
+              </span>
+              <span class="icon-btn">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+                </svg>
+              </span>
+              <span class="icon-btn">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="22" y1="2" x2="11" y2="13"/>
+                  <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                </svg>
+              </span>
+            </div>
+
+            <!-- 내용 캡션 및 날짜 -->
+            <div class="post-details">
+              ${p.caption ? `
+                <div class="caption-box">
+                  <span class="caption-author">${escapeHtml(p.author || '익명')}</span>
+                  <span>${escapeHtml(p.caption)}</span>
+                </div>
+              ` : ''}
+              <div class="post-time">${p.createdAt}</div>
+            </div>
           </div>
-          <img class="feed-img" src="${p.imageUrl}" loading="lazy" alt="변t 사진">
-          ${p.caption ? `<div class="feed-body"><p class="feed-caption">${escapeHtml(p.caption)}</p></div>` : ''}
-        </div>
-      `).join('');
+        `;
+      }).join('');
     } catch (err) {
       console.error(err);
     }
@@ -282,13 +466,13 @@
     e.preventDefault();
     const fileInput = document.getElementById('imageInput');
     if (!fileInput.files[0]) {
-      alert('사진을 선택해주세요!');
+      alert('공유할 사진을 선택하세요!');
       return;
     }
 
     const btn = document.getElementById('submitBtn');
     btn.disabled = true;
-    btn.innerText = '업로드 중...';
+    btn.innerText = '공유 중...';
 
     const formData = new FormData();
     formData.append('image', fileInput.files[0]);
@@ -302,16 +486,16 @@
       });
       if (res.ok) {
         document.getElementById('uploadForm').reset();
-        document.getElementById('fileName').innerText = '선택된 파일 없음';
+        document.getElementById('fileChosen').innerText = '선택된 사진 없음';
         fetchPosts();
       } else {
         alert('업로드 실패');
       }
     } catch (err) {
-      alert('서버 오류 발생');
+      alert('서버 오류');
     } finally {
       btn.disabled = false;
-      btn.innerText = '게시하기';
+      btn.innerText = '공유하기';
     }
   }
 
